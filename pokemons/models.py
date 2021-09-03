@@ -33,7 +33,7 @@ class Pokemon(models.Model):
     def __eq__(self, pokemon):
         return self.id == pokemon.id
     
-    def update_evolution(self, some_pokemon):
+    def set_evolves_to(self, some_pokemon):
         self.evolves_to = some_pokemon
         self.save()
 
@@ -41,7 +41,7 @@ class Pokemon(models.Model):
     def fetch_from_poke_api_by_name(cls, pokemon_name):
 
         # Search for Pokemon, if it is registered there's no need to register it again
-        pokemon = Pokemon.objects.filter(name=pokemon_name)
+        pokemon = cls.objects.filter(name=pokemon_name)
 
         if pokemon:
             return None
