@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+# TODO Config python-decouple and separate config data from code and repo
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h9z8cm@gm+%g7)#fqnj9)m-ktj5@0vjgp@+j5j-5f&=33p^pj6'
+SECRET_KEY = config('SECRET_KEY', cast=str, default='')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool, default=False)
+
 
 ALLOWED_HOSTS = []
 
@@ -37,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'rest_framework',
 
     'pokemons',
 ]
@@ -75,13 +80,25 @@ WSGI_APPLICATION = 'poke_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+DATABASE = config('DATABASE', cast=str, default='sqlite')
+
+DATABASES = {}
+
+if DATABASE == 'sqlite':
+    DATABASES['default'] = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
 
+elif DATABASE == 'postgre':
+    DATABASES['default'] = {
+        'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+        'NAME': config('DB_NAME', cast=str, default='pokemons_db'),
+        'USER': config('DB_USER', cast=str, default='admin'),
+        'PASSWORD': config('DB_PASS', cast=str),
+        'HOST': config('DB_HOST', cast=str, default='localhost'),
+        'PORT': config('DB_PORT', cast=int, default=5432)
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
