@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from pokemons.views import PokemonSearchAPIView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('pokemons/search', PokemonSearchAPIView.as_view(), name="pokemon_search"),
 ]
