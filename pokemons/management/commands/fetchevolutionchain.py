@@ -31,7 +31,7 @@ class Command(BaseCommand):
         if evolution_chain_json is None:
             print("A Connection Error occurred. Check your connection and try again.")
             return
-
+        evolutions = []
         try:
             # Assert the Evolution Chain ID is the same we're looking for
             assert options['evolution_chain_id'] == evolution_chain_json['id']
@@ -68,13 +68,13 @@ class Command(BaseCommand):
                 if next_pokemon is not None:
                     next_pokemon.save()
 
-                    pokemon.update_evolution(next_pokemon)
+                    pokemon.set_evolves_to(next_pokemon)
+                    print(f"Added Pokemon {pokemon.name} with {pokemon.id} to Evolution Chain")
 
                     pokemon = next_pokemon
-                    print(f"Added Pokemon {pokemon.name} to Evolution Chain")
 
         except ValidationError as e:
-            print(e.errors)
+            print("Validation Errors were found: ", ', '.join(e.errors))
             return
 
         except AssertionError as e:
@@ -82,5 +82,5 @@ class Command(BaseCommand):
             return
 
         except Exception as e:
-            print(e)
+            print(f"Something odd happened: {e}")
             return
