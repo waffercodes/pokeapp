@@ -30,3 +30,16 @@ using the Django command
 ```
 
 ## Fetch Pokemon information and Evolution Chains
+
+Run
+
+```
+python manage.py fetchevolutionchain <int:some_id>
+```
+
+In order to fetch Pokemon Evolution Chain with the given ID and store all of its Pokemons in the DB
+
+
+## Search service
+
+Make a GET request to the ```/pokemons/search?pokemon_name=somename``` with pokemon_name as a query parameter to retrieve a list of matching Pokemons 
